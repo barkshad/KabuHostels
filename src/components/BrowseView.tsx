@@ -6,8 +6,9 @@
 import React, { useState, useEffect } from 'react';
 import { DBService } from '../services/dbModule';
 import { Hostel, Category } from '../types';
-import { Search, MapPin, Grid, Map, Star, ArrowRight, SlidersHorizontal, Check, RefreshCw, X } from 'lucide-react';
+import { Search, MapPin, Grid, Map, Star, ArrowRight, SlidersHorizontal, Check, RefreshCw, X, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { PremiumVideoPlayer } from './PremiumVideoPlayer';
 
 interface BrowseViewProps {
   initialParams?: {
@@ -323,12 +324,38 @@ export const BrowseView: React.FC<BrowseViewProps> = ({ initialParams, onNavigat
                     className="bg-white border border-slate-150 rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl transition-all duration-200 cursor-pointer group flex flex-col h-full"
                   >
                     <div className="relative aspect-video bg-slate-150 overflow-hidden">
-                      <img 
-                        src={h.media[0]?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
-                        alt={h.name} 
-                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-200 skeleton"
-                        referrerPolicy="no-referrer"
-                      />
+                      {h.media.find(m => m.resource_type === 'video') ? (
+                        hoveredHostelId === h.id ? (
+                          <PremiumVideoPlayer 
+                            url={h.media.find(m => m.resource_type === 'video')!.secure_url} 
+                            poster={h.media.find(m => m.resource_type === 'image')?.secure_url}
+                            isHoverMode={true}
+                            className="w-full h-full"
+                          />
+                        ) : (
+                          <div className="w-full h-full relative">
+                            <img 
+                              src={h.media.find(m => m.resource_type === 'image')?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
+                              alt={h.name} 
+                              className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-200 skeleton"
+                              referrerPolicy="no-referrer"
+                            />
+                            {/* Glow badge overlay informing live video is available on hover */}
+                            <div className="absolute inset-0 bg-black/15 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              <span className="bg-black/75 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 text-[9px] font-bold tracking-widest font-mono uppercase rounded-xl flex items-center gap-1.5 shadow-lg">
+                                <Play className="w-3.5 h-3.5 fill-white text-white animate-pulse" /> Live Preview
+                              </span>
+                            </div>
+                          </div>
+                        )
+                      ) : (
+                        <img 
+                          src={h.media.find(m => m.resource_type === 'image')?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
+                          alt={h.name} 
+                          className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-200 skeleton"
+                          referrerPolicy="no-referrer"
+                        />
+                      )}
                       <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs border border-white/50 rounded-full px-2 py-0.5 text-[9px] uppercase font-bold tracking-wider text-slate-800">
                         {categories.find(c => c.id === h.categoryId)?.name.split(" ")[0]}
                       </div>

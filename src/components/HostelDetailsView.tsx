@@ -9,9 +9,10 @@ import { Hostel, Category, Review, Booking, InquiryMessage } from '../types';
 import { useAuth } from '../context/AuthContext';
 import { 
   MapPin, Star, Calendar, MessageSquare, AlertCircle, Phone, Sparkles, Check, 
-  ArrowLeft, Heart, Shield, Clock, Info, Loader2, Send, CheckCircle2 
+  ArrowLeft, Heart, Shield, Clock, Info, Loader2, Send, CheckCircle2, Play
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { PremiumVideoPlayer } from './PremiumVideoPlayer';
 
 interface HostelDetailsViewProps {
   params: { hostelId: string };
@@ -200,14 +201,21 @@ export const HostelDetailsView: React.FC<HostelDetailsViewProps> = ({ params, on
         {/* Photo Gallery - Left Block (col 7) */}
         <div className="lg:col-span-7 space-y-4">
           <div className="aspect-video w-full rounded-3xl overflow-hidden bg-slate-900 shadow-sm border border-slate-100 relative">
-            <img 
-              src={activePhoto} 
-              alt={hostel.name} 
-              className="w-full h-full object-cover transition-opacity duration-300"
-              referrerPolicy="no-referrer"
-            />
+            {hostel.media.find(m => m.secure_url === activePhoto)?.resource_type === 'video' ? (
+              <PremiumVideoPlayer 
+                url={activePhoto} 
+                poster={hostel.media.find(m => m.resource_type === 'image')?.secure_url}
+              />
+            ) : (
+              <img 
+                src={activePhoto} 
+                alt={hostel.name} 
+                className="w-full h-full object-cover transition-opacity duration-300"
+                referrerPolicy="no-referrer"
+              />
+            )}
             {isSoldOut && (
-              <div className="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-xs">
+              <div className="absolute inset-0 bg-slate-950/40 flex items-center justify-center backdrop-blur-xs z-10">
                 <span className="bg-rose-500/90 text-white font-extrabold uppercase tracking-widest px-6 py-3 rounded-xl shadow-lg border border-rose-400 text-sm">
                   Full Allocation Reached
                 </span>
@@ -217,27 +225,52 @@ export const HostelDetailsView: React.FC<HostelDetailsViewProps> = ({ params, on
             {/* Wishlist toggle */}
             <button 
               onClick={() => setIsWished(!isWished)}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-xs border border-slate-100 flex items-center justify-center text-rose-500 hover:scale-105 transition-transform"
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 backdrop-blur-xs border border-slate-100 flex items-center justify-center text-rose-500 hover:scale-105 transition-transform z-10"
             >
               <Heart className={`w-5 h-5 ${isWished ? 'fill-rose-500 text-rose-500' : 'text-slate-400'}`} />
             </button>
           </div>
 
           {/* Thumbnail strip */}
-          <div className="flex gap-3 overflow-x-auto pb-1">
-            {hostel.media.map((pic) => (
-              <button
-                key={pic.public_id}
-                onClick={() => setActivePhoto(pic.secure_url)}
-                className={`w-28 aspect-video rounded-xl overflow-hidden shrink-0 border-2 transition-all ${
-                  activePhoto === pic.secure_url 
-                    ? 'border-indigo-600 shadow-xs' 
-                    : 'border-slate-150 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img src={pic.secure_url} alt="Room view" className="w-full h-full object-cover" />
-              </button>
-            ))}
+          <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-thin">
+            {hostel.media.map((pic) => {
+              const isVideo = pic.resource_type === 'video';
+              return (
+                <button
+                  key={pic.public_id}
+                  onClick={() => {
+                    setActivePhoto(pic.secure_url);
+                  }}
+                  className={`w-28 aspect-video rounded-xl overflow-hidden shrink-0 border-2 transition-all relative group/thumb ${
+                    activePhoto === pic.secure_url 
+                      ? 'border-indigo-600 shadow-xs' 
+                      : 'border-slate-150 opacity-70 hover:opacity-100'
+                  }`}
+                >
+                  {isVideo ? (
+                    <div className="w-full h-full bg-slate-950 relative flex items-center justify-center">
+                      <img 
+                        src={hostel.media.find(m => m.resource_type === 'image')?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=150&q=80"} 
+                        alt="Video Preview Thumbnail" 
+                        className="w-full h-full object-cover opacity-60 blur-[1px] transition-transform duration-300 group-hover/thumb:scale-103" 
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/25">
+                        <Play className="w-5 h-5 text-white fill-white" />
+                      </div>
+                      <span className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded text-[8px] font-bold text-white font-mono uppercase tracking-wider">
+                        Live Tour
+                      </span>
+                    </div>
+                  ) : (
+                    <img 
+                      src={pic.secure_url} 
+                      alt="Room view" 
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover/thumb:scale-103" 
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* Core Property Details tab views */}

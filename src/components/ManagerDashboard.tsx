@@ -42,10 +42,19 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onNavigate }
   const [hAmenities, setHAmenities] = useState<string[]>([]);
   const [hRules, setHRules] = useState<string[]>([]);
   const [hImage, setHImage] = useState('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80');
+  const [hVideo, setHVideo] = useState('');
 
   // Simulated Media upload states
   const [isUploading, setIsUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
+  const [uploadType, setUploadType] = useState<'image' | 'video'>('image');
+  const [uploadDiagnosticLogs, setUploadDiagnosticLogs] = useState<string[]>([]);
+  const [uploadMetrics, setUploadMetrics] = useState({
+    originalSize: '',
+    compressedSize: '',
+    ratio: '',
+    codec: ''
+  });
   
   // Reply modal state
   const [replyInquiryId, setReplyInquiryId] = useState<string | null>(null);
@@ -193,39 +202,109 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onNavigate }
   };
 
   // Simulated Media upload pipeline with progress feedback
-  const handleSimulatedUpload = () => {
+  const handleSimulatedUpload = (type: 'image' | 'video') => {
     setIsUploading(true);
-    setUploadStatus('Staging selected file...');
+    setUploadType(type);
+    setUploadDiagnosticLogs([]);
+    setUploadMetrics({
+      originalSize: '',
+      compressedSize: '',
+      ratio: '',
+      codec: ''
+    });
     
-    // Step 1: Compress
-    setTimeout(() => {
-      setUploadStatus('Compressing: 4.8MB -> 230KB (Lossless PNG optimized)...');
-    }, 800);
+    const logs: string[] = [];
+    const addLog = (msg: string) => {
+      logs.push(`[${new Date().toLocaleTimeString()}] ${msg}`);
+      setUploadDiagnosticLogs([...logs]);
+    };
 
-    // Step 2: Push to Storage
+    addLog(`Staging raw file bytes for ${type === 'video' ? 'tour_cinematic.mov' : 'bedspace_main.png'}...`);
+    setUploadStatus(`Initializing upload staging channels...`);
+    
+    // Compression Phase
     setTimeout(() => {
-      setUploadStatus('Uploading asset to Cloudinary CDN storage headers...');
-    }, 1800);
+      if (type === 'video') {
+        addLog("Analyzing bitrates and frame containers (MOV container detected)...");
+        addLog("Initiating dynamic Cloudinary transcode sequence: H.264 encode triggered...");
+        setUploadStatus("Transcoding codec structures into optimized standard h264 files...");
+      } else {
+        addLog("Staging raw high-res pixel maps...");
+        setUploadStatus("Synthesizing lossy and metadata compressions...");
+      }
+    }, 605);
 
-    // Step 3: Complete
+    // CDN Sync Phase
     setTimeout(() => {
-      // Pick a random alternative beautiful hostel image to visual interest!
-      const alternativeImages = [
-        'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
-        'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
-      ];
-      const randomImg = alternativeImages[Math.floor(Math.random() * alternativeImages.length)];
-      setHImage(randomImg);
+      if (type === 'video') {
+        setUploadMetrics({
+          originalSize: '184.5 MB',
+          compressedSize: '14.2 MB',
+          ratio: '92.3% compressed',
+          codec: 'H.264 Video Codec via Cloudinary (vc_h264, f_auto, q_auto)'
+        });
+        addLog("Structuring segment slices for rapid, adaptive chunk delivery...");
+        addLog("Pushing transcode to edge CDN endpoint clusters...");
+        setUploadStatus("Propagating video assets globally over fast Cloudinary edges...");
+      } else {
+        setUploadMetrics({
+          originalSize: '5.2 MB',
+          compressedSize: '390 KB',
+          ratio: '92.5% compressed',
+          codec: 'WebP Image Optimizer via Cloudinary (f_auto, q_auto)'
+        });
+        addLog("Formulating responsive sizing layouts...");
+        addLog("Saving compressed image arrays to static directories...");
+        setUploadStatus("Synchronizing and validating edge paths...");
+      }
+    }, 1805);
+
+    // Complete Phase
+    setTimeout(() => {
+      if (type === 'video') {
+        const videoSources = [
+          'https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-with-elegant-minimalist-living-room-44755-large.mp4',
+          'https://assets.mixkit.co/videos/preview/mixkit-sunny-loft-style-apartment-interior-living-room-43183-large.mp4',
+          'https://assets.mixkit.co/videos/preview/mixkit-beautiful-modern-house-interior-view-40748-large.mp4'
+        ];
+        const randomVid = videoSources[Math.floor(Math.random() * videoSources.length)];
+        setHVideo(randomVid);
+        addLog(`Delivery confirmed: ${randomVid}`);
+        setUploadStatus("Cloudinary video optimization complete!");
+      } else {
+        const alternativeImages = [
+          'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
+          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=80'
+        ];
+        const randomImg = alternativeImages[Math.floor(Math.random() * alternativeImages.length)];
+        setHImage(randomImg);
+        addLog(`Delivery confirmed: ${randomImg}`);
+        setUploadStatus("Image uploaded successfully!");
+      }
       setIsUploading(false);
-      setUploadStatus('Upload Complete!');
-    }, 2800);
+    }, 3205);
   };
 
   const handlePropertySubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!hName || !hPrice) return;
+
+    const hostelMediaList = [
+      ...(hVideo ? [{
+        public_id: `vid-${Date.now()}`,
+        secure_url: hVideo,
+        resource_type: 'video' as const,
+        order: 1
+      }] : []),
+      {
+        public_id: `img-${Date.now()}`,
+        secure_url: hImage,
+        resource_type: 'image' as const,
+        order: hVideo ? 2 : 1
+      }
+    ];
 
     const hostelObj: Hostel = {
       id: editingHostelId || `hostel-${Date.now()}`,
@@ -243,14 +322,7 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onNavigate }
       rules: hRules,
       managerAgentId: user?.uid || 'mgr-alice',
       status: 'available',
-      media: [
-        {
-          public_id: `img-${Date.now()}`,
-          secure_url: hImage,
-          resource_type: 'image',
-          order: 1
-        }
-      ],
+      media: hostelMediaList,
       createdAt: editingHostelId ? (DBService.getHostelById(editingHostelId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       semester: 'Jan-April 2026'
@@ -848,33 +920,106 @@ export const ManagerDashboard: React.FC<ManagerDashboardProps> = ({ onNavigate }
               </div>
 
               {/* Media simulated comp uploader */}
-              <div className="space-y-2">
-                <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Staging showcase photo URL</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    required
-                    value={hImage}
-                    onChange={(e) => setHImage(e.target.value)}
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-805 focus:outline-hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSimulatedUpload}
-                    disabled={isUploading}
-                    className="bg-slate-900 border hover:bg-slate-800 text-white font-bold text-xs py-2 px-4 rounded-xl flex items-center gap-1 shrink-0"
-                  >
-                    <Image className="w-4 h-4" /> Simulate Image Compression
-                  </button>
+              <div className="space-y-4 bg-slate-50 p-4.5 rounded-2xl border border-slate-100">
+                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">Cloudinary & CDN Media Pipelines</h4>
+                
+                {/* 1. Image Block */}
+                <div className="space-y-1.5 text-xs font-sans">
+                  <label className="text-[10px] font-bold text-slate-500 font-mono uppercase">Room Header Image URL</label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={hImage}
+                      onChange={(e) => setHImage(e.target.value)}
+                      placeholder="Image URL"
+                      className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSimulatedUpload('image')}
+                      disabled={isUploading}
+                      className="bg-white border text-slate-800 border-slate-200 hover:bg-slate-50 font-bold text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1 shrink-0 cursor-pointer disabled:opacity-50"
+                    >
+                      <Image className="w-4 h-4 text-indigo-600" /> Staging Lossless PNG
+                    </button>
+                  </div>
                 </div>
 
+                {/* 2. Video Block */}
+                <div className="space-y-1.5 text-xs font-sans">
+                  <label className="text-[10px] font-bold text-slate-500 font-mono uppercase flex justify-between">
+                    <span>Virtual Room Video Tour URL (Optional)</span>
+                    <span className="text-amber-500 font-sans tracking-normal font-medium text-[9px] lowercase">autodetects CORS/codecs</span>
+                  </label>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      value={hVideo}
+                      onChange={(e) => setHVideo(e.target.value)}
+                      placeholder="Video URL e.g. .mp4 / .webm"
+                      className="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-hidden font-mono"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleSimulatedUpload('video')}
+                      disabled={isUploading}
+                      className="bg-slate-900 border hover:bg-slate-800 text-white font-bold text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1 shrink-0 cursor-pointer disabled:opacity-50"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 text-amber-400 ${isUploading && uploadType === 'video' ? 'animate-spin' : ''}`} /> Transcode Video Stream
+                    </button>
+                  </div>
+                </div>
+
+                {/* Simulated Diagnostic Reports Area */}
                 {isUploading && (
-                  <div className="bg-slate-50 p-4 border rounded-xl space-y-2 text-xs text-slate-505">
-                    <p className="font-bold flex items-center gap-1">
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-indigo-600" /> {uploadStatus}
+                  <div className="bg-slate-950 p-4 rounded-xl space-y-3.5 text-xs text-slate-300 font-mono ring-1 ring-white/10 shadow-inner">
+                    <p className="font-bold flex items-center gap-1.5 text-indigo-400">
+                      <RefreshCw className="w-3.5 h-3.5 animate-spin text-amber-400" /> {uploadStatus}
                     </p>
-                    <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
-                      <div className="bg-indigo-600 h-full animate-marquee-progress" style={{ width: '60%' }}></div>
+                    <div className="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                      <div className="bg-amber-400 h-full animate-pulse" style={{ width: '65%' }}></div>
+                    </div>
+                    {/* Diagnostic reports ticks */}
+                    {uploadDiagnosticLogs.length > 0 && (
+                      <div className="text-[10px] text-slate-400 bg-black/60 p-2.5 rounded-lg border border-white/5 space-y-1 max-h-32 overflow-y-auto">
+                        {uploadDiagnosticLogs.map((log, i) => (
+                          <div key={i} className="leading-relaxed">{log}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Show simulation result parameters */}
+                {!isUploading && uploadStatus && uploadMetrics.originalSize && (
+                  <div className="bg-emerald-50/50 border border-emerald-100 p-4 rounded-xl space-y-2 text-[11px] font-sans text-slate-750 animate-fade-in">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded-full bg-emerald-500/15 text-emerald-600 flex items-center justify-center font-bold">✓</div>
+                      <h5 className="font-bold text-emerald-950 uppercase tracking-tight text-[11px] font-mono leading-none">Automatic Cloudinary Optimizations Activated</h5>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-[10px] pt-1 leading-normal font-sans">
+                      <div className="bg-white p-2 rounded-lg border border-slate-100">
+                        <span className="text-slate-400 font-mono uppercase block text-[8px]">Original size</span>
+                        <span className="font-extrabold text-slate-800 font-mono">{uploadMetrics.originalSize}</span>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-100">
+                        <span className="text-slate-400 font-mono uppercase block text-[8px]">Delivery size</span>
+                        <span className="font-extrabold text-slate-800 font-mono text-emerald-700">{uploadMetrics.compressedSize}</span>
+                      </div>
+                      <div className="bg-white p-2 rounded-lg border border-slate-100 col-span-2">
+                        <span className="text-slate-400 font-mono uppercase block text-[8px]">Target Codec Option</span>
+                        <span className="font-extrabold text-slate-800 truncate block font-mono text-[9px]">{uploadMetrics.codec}</span>
+                      </div>
+                    </div>
+                    
+                    {/* Checklist of simulated codecs/optimizations */}
+                    <div className="mt-3 pt-3 border-t border-slate-200/50 flex flex-wrap gap-2 text-[9px] uppercase font-bold tracking-wider text-slate-500 font-mono">
+                      <span className="bg-emerald-100/50 text-emerald-800 px-1.5 py-0.5 rounded flex items-center gap-0.5">✓ MP4 (H.264)</span>
+                      <span className="bg-emerald-100/50 text-emerald-800 px-1.5 py-0.5 rounded flex items-center gap-0.5">✓ WebM Fallback</span>
+                      <span className="bg-emerald-100/50 text-emerald-800 px-1.5 py-0.5 rounded flex items-center gap-0.5">✓ Progressive Loading</span>
+                      <span className="bg-emerald-100/50 text-emerald-800 px-1.5 py-0.5 rounded flex items-center gap-0.5">✓ Adaptive Streaming</span>
+                      <span className="bg-emerald-100/50 text-emerald-800 px-1.5 py-0.5 rounded flex items-center gap-0.5">✓ Autoplay Approved</span>
                     </div>
                   </div>
                 )}

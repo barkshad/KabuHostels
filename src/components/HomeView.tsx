@@ -6,8 +6,9 @@
 import React, { useState, useEffect } from 'react';
 import { DBService } from '../services/dbModule';
 import { Hostel, SiteSettings, Category } from '../types';
-import { Search, MapPin, Check, Star, ArrowRight, ShieldCheck, HelpCircle, Activity, Award, Sparkles } from 'lucide-react';
+import { Search, MapPin, Check, Star, ArrowRight, ShieldCheck, HelpCircle, Activity, Award, Sparkles, Play } from 'lucide-react';
 import { motion } from 'motion/react';
+import { PremiumVideoPlayer } from './PremiumVideoPlayer';
 
 interface HomeViewProps {
   onNavigate: (view: string, params?: any) => void;
@@ -20,6 +21,7 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState('');
   const [priceMax, setPriceMax] = useState('30000');
+  const [hoveredHostelId, setHoveredHostelId] = useState<string | null>(null);
 
   useEffect(() => {
     setSettings(DBService.getSettings());
@@ -198,26 +200,54 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate }) => {
               <div 
                 key={h.id}
                 onClick={() => onNavigate('hostel-details', { hostelId: h.id })}
+                onMouseEnter={() => setHoveredHostelId(h.id)}
+                onMouseLeave={() => setHoveredHostelId(null)}
                 className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer group flex flex-col h-full"
               >
                 {/* Media Section */}
                 <div className="relative aspect-video w-full overflow-hidden bg-slate-100">
-                  <img 
-                    src={h.media[0]?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
-                    alt={h.name} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 skeleton"
-                    referrerPolicy="no-referrer"
-                  />
+                  {h.media.find(m => m.resource_type === 'video') ? (
+                    hoveredHostelId === h.id ? (
+                      <PremiumVideoPlayer 
+                        url={h.media.find(m => m.resource_type === 'video')!.secure_url} 
+                        poster={h.media.find(m => m.resource_type === 'image')?.secure_url}
+                        isHoverMode={true}
+                        className="w-full h-full"
+                      />
+                    ) : (
+                      <div className="w-full h-full relative">
+                        <img 
+                          src={h.media.find(m => m.resource_type === 'image')?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
+                          alt={h.name} 
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 skeleton"
+                          referrerPolicy="no-referrer"
+                        />
+                        {/* Glow badge overlay informing live video is available on hover */}
+                        <div className="absolute inset-0 bg-black/15 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <span className="bg-black/75 backdrop-blur-md text-white border border-white/20 px-3 py-1.5 text-[9px] font-bold tracking-widest font-mono uppercase rounded-xl flex items-center gap-1.5 shadow-lg">
+                            <Play className="w-3.5 h-3.5 fill-white text-white animate-pulse" /> Live Preview
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <img 
+                      src={h.media.find(m => m.resource_type === 'image')?.secure_url || "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=400&q=80"} 
+                      alt={h.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 skeleton"
+                      referrerPolicy="no-referrer"
+                    />
+                  )}
                   
                   {/* Category tag */}
-                  <div className="absolute top-4 left-4 pt-0.5">
+                  <div className="absolute top-4 left-4 pt-0.5 z-10">
                     <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-900 bg-white/90 backdrop-blur-xs border border-white/40 shadow-2xs font-mono">
                       {categories.find(c => c.id === h.categoryId)?.name.split(" ")[0]}
                     </span>
                   </div>
 
                   {/* Status Overlay Tag */}
-                  <div className="absolute top-4 right-4 pt-0.5">
+                  <div className="absolute top-4 right-4 pt-0.5 z-10">
                     <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1 ${
                       isAvailable 
                         ? 'bg-emerald-500/90 text-white' 

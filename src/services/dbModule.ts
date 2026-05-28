@@ -51,9 +51,16 @@ export class DBService {
     if (!localStorage.getItem(KEYS.CATEGORIES)) {
       this.set(KEYS.CATEGORIES, INITIAL_CATEGORIES);
     }
-    if (!localStorage.getItem(KEYS.HOSTELS)) {
+    
+    // Auto-migrate seeded lists once to support video previews
+    const videov1 = localStorage.getItem('kabu_hostels_video_seeded_v1');
+    if (!videov1) {
+      this.set(KEYS.HOSTELS, INITIAL_HOSTELS);
+      localStorage.setItem('kabu_hostels_video_seeded_v1', 'true');
+    } else if (!localStorage.getItem(KEYS.HOSTELS)) {
       this.set(KEYS.HOSTELS, INITIAL_HOSTELS);
     }
+
     if (!localStorage.getItem(KEYS.BOOKINGS)) {
       this.set(KEYS.BOOKINGS, INITIAL_BOOKINGS);
     }

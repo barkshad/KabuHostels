@@ -119,22 +119,28 @@ export const INITIAL_HOSTELS: Hostel[] = [
     status: 'available',
     media: [
       {
+        public_id: 'eden_video',
+        secure_url: 'https://assets.mixkit.co/videos/preview/mixkit-modern-apartment-with-elegant-minimalist-living-room-44755-large.mp4',
+        resource_type: 'video',
+        order: 1
+      },
+      {
         public_id: 'eden_main',
         secure_url: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 1
+        order: 2
       },
       {
         public_id: 'eden_room',
         secure_url: 'https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 2
+        order: 3
       },
       {
         public_id: 'eden_lounge',
         secure_url: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 3
+        order: 4
       }
     ],
     createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
@@ -148,7 +154,7 @@ export const INITIAL_HOSTELS: Hostel[] = [
     price: 16000,
     deposit: 2500,
     categoryId: 'cat-boys',
-    location: 'Kabarak-Rafiki Road, 400m from Main Gate',
+    location: 'Rafiki Road, 400m from Main Gate',
     latitude: -0.1712,
     longitude: 35.9710,
     capacity: 80,
@@ -165,10 +171,16 @@ export const INITIAL_HOSTELS: Hostel[] = [
         order: 1
       },
       {
+        public_id: 'eben_video',
+        secure_url: 'https://assets.mixkit.co/videos/preview/mixkit-sunny-loft-style-apartment-interior-living-room-43183-large.mp4',
+        resource_type: 'video',
+        order: 2
+      },
+      {
         public_id: 'eben_bed',
         secure_url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 2
+        order: 3
       }
     ],
     createdAt: new Date(Date.now() - 86400000 * 20).toISOString(),
@@ -193,16 +205,22 @@ export const INITIAL_HOSTELS: Hostel[] = [
     status: 'available',
     media: [
       {
+        public_id: 'grad_video',
+        secure_url: 'https://assets.mixkit.co/videos/preview/mixkit-beautiful-modern-house-interior-view-40748-large.mp4',
+        resource_type: 'video',
+        order: 1
+      },
+      {
         public_id: 'grad_main',
         secure_url: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 1
+        order: 2
       },
       {
         public_id: 'grad_int',
         secure_url: 'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80',
         resource_type: 'image',
-        order: 2
+        order: 3
       }
     ],
     createdAt: new Date(Date.now() - 86400000 * 45).toISOString(),
