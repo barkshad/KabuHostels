@@ -1,0 +1,150 @@
+{
+  "entities": {
+    "hostel": {
+      "title": "Hostel",
+      "description": "A hostel accommodation available at or around Kabarak University",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "integer" },
+        "deposit": { "type": "integer" },
+        "categoryId": { "type": "string" },
+        "location": { "type": "string" },
+        "latitude": { "type": "number" },
+        "longitude": { "type": "number" },
+        "capacity": { "type": "integer" },
+        "availableRooms": { "type": "integer" },
+        "amenities": { "type": "array" },
+        "rules": { "type": "array" },
+        "managerAgentId": { "type": "string" },
+        "status": { "type": "string" },
+        "media": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "semester": { "type": "string" }
+      },
+      "required": ["id", "name", "price", "categoryId", "location", "managerAgentId", "status"]
+    },
+    "booking": {
+      "title": "Booking",
+      "description": "A hostel room booking made by a student",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "studentId": { "type": "string" },
+        "hostelId": { "type": "string" },
+        "roomNumber": { "type": "string" },
+        "checkInDate": { "type": "string" },
+        "checkOutDate": { "type": "string" },
+        "duration": { "type": "string" },
+        "numberOfGuests": { "type": "integer" },
+        "specialRequests": { "type": "string" },
+        "status": { "type": "string" },
+        "totalPrice": { "type": "integer" },
+        "depositPaid": { "type": "boolean" },
+        "paymentStatus": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "studentId", "hostelId", "roomNumber", "duration", "status", "totalPrice", "paymentStatus"]
+    },
+    "manager": {
+      "title": "Manager",
+      "description": "Hostel Manager/Agent account details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "whatsappNumber": { "type": "string" },
+        "profilePhotoURL": { "type": "string" },
+        "hostelName": { "type": "string" },
+        "businessDetails": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "commission": { "type": "integer" },
+        "createdAt": { "type": "string" },
+        "verificationStatus": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "phone", "isActive", "verificationStatus"]
+    },
+    "student": {
+      "title": "Student",
+      "description": "Student account details",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "studentId": { "type": "string" },
+        "fullName": { "type": "string" },
+        "phone": { "type": "string" },
+        "year": { "type": "string" },
+        "course": { "type": "string" },
+        "profilePhotoURL": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "verificationStatus": { "type": "string" }
+      },
+      "required": ["id", "email", "studentId", "fullName", "verificationStatus"]
+    },
+    "category": {
+      "title": "Category",
+      "description": "Type of hostel",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "order": { "type": "integer" }
+      },
+      "required": ["id", "name", "slug", "isActive", "order"]
+    },
+    "siteSettings": {
+      "title": "SiteSettings",
+      "description": "Platform-wide custom configurations",
+      "type": "object",
+      "properties": {
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "heroImage": { "type": "string" },
+        "ctaText": { "type": "string" },
+        "ctaButtonText": { "type": "string" },
+        "featuredHostelIds": { "type": "array" },
+        "platformName": { "type": "string" },
+        "university": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "supportPhone": { "type": "string" },
+        "commissionRate": { "type": "integer" }
+      }
+    }
+  },
+  "firestore": {
+    "/hostels/{hostelId}": {
+      "schema": { "$ref": "#/entities/hostel" },
+      "description": "Hostel listings collection"
+    },
+    "/bookings/{bookingId}": {
+      "schema": { "$ref": "#/entities/booking" },
+      "description": "Student hostel bookings"
+    },
+    "/managers/{managerId}": {
+      "schema": { "$ref": "#/entities/manager" },
+      "description": "Registered and approved hostel managers"
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/student" },
+      "description": "Registered student accounts"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/category" },
+      "description": "Hostel residence categories"
+    },
+    "/siteSettings/global": {
+      "schema": { "$ref": "#/entities/siteSettings" },
+      "description": "Platform main configs"
+    }
+  }
+}

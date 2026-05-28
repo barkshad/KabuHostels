@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-indigo-50: #f1f8f4;
+  --color-indigo-100: #e0f0e6;
+  --color-indigo-200: #c2e2cc;
+  --color-indigo-300: #95ceaa;
+  --color-indigo-400: #5fba82;
+  --color-indigo-500: #0d834b;
+  --color-indigo-600: #0a5c36; /* Official Kabarak Forest Green */
+  --color-indigo-700: #064527;
+  --color-indigo-800: #04351d;
+  --color-indigo-900: #032b17;
+  --color-indigo-950: #01180c;
+
+  --color-amber-400: #ffcc00; /* Official Kabarak Gold */
+  --color-amber-500: #e5a823;
+  --color-amber-600: #ca8a04;
+}

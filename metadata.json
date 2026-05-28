@@ -1,0 +1,6 @@
+{
+  "name": "Kabarak Hostel Booking",
+  "description": "Kabarak University Hostel Booking & Management Platform for students and managers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
